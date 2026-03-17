@@ -1,0 +1,2313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blackthorn & Co. — The Collection</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    cursor: none;
+    border-radius: 0;
+  }
+
+  :root {
+    --black: #000000;
+    --gold: #C9A84C;
+    --gold-light: #E8C96A;
+    --gold-dark: #8B6914;
+    --text-primary: #F5F0E8;
+    --text-muted: #6B6560;
+    --surface: #0A0A0A;
+    --border: #1A1A1A;
+  }
+
+  html, body {
+    background: var(--black);
+    color: var(--text-primary);
+    font-family: 'Raleway', sans-serif;
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* ── CROSSHAIR ── */
+  #crosshair {
+    position: fixed;
+    z-index: 9999;
+    pointer-events: none;
+    top: 0;
+    left: 0;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.5s;
+    width: 0;
+    height: 0;
+  }
+
+  .ch-dot {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: var(--gold);
+    border-radius: 50%;
+    top: -2px;
+    left: -2px;
+    transition: width 0.2s, height 0.2s, top 0.2s, left 0.2s;
+  }
+
+  .ch-line {
+    position: absolute;
+    background: rgba(201,168,76,0.7);
+    transition: height 0.2s, width 0.2s, opacity 0.2s;
+  }
+
+  .ch-top {
+    width: 1px;
+    height: 14px;
+    left: -0.5px;
+    bottom: 6px;
+  }
+
+  .ch-bottom {
+    width: 1px;
+    height: 14px;
+    left: -0.5px;
+    top: 6px;
+  }
+
+  .ch-left {
+    height: 1px;
+    width: 14px;
+    top: -0.5px;
+    right: 6px;
+  }
+
+  .ch-right {
+    height: 1px;
+    width: 14px;
+    top: -0.5px;
+    left: 6px;
+  }
+
+  #crosshair.crosshair--active .ch-dot {
+    width: 6px;
+    height: 6px;
+    top: -3px;
+    left: -3px;
+  }
+
+  #crosshair.crosshair--active .ch-top,
+  #crosshair.crosshair--active .ch-bottom {
+    height: 22px;
+    opacity: 1;
+  }
+
+  #crosshair.crosshair--active .ch-left,
+  #crosshair.crosshair--active .ch-right {
+    width: 22px;
+    opacity: 1;
+  }
+
+  /* ── NAV ── */
+  .shop-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background: var(--black);
+    border-bottom: 1px solid var(--gold);
+    z-index: 500;
+    padding: 0 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 28px;
+    color: var(--gold);
+    text-decoration: none;
+    letter-spacing: 0.05em;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 400;
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .nav-links a:hover {
+    color: var(--gold);
+  }
+
+  .nav-cart-wrap {
+    position: relative;
+  }
+
+  #cart-badge {
+    position: absolute;
+    top: -6px;
+    right: -10px;
+    background: var(--gold);
+    color: var(--black);
+    font-size: 9px;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 400;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ── STATES ── */
+  .shop-state {
+    display: none;
+    min-height: 100vh;
+  }
+
+  /* ── STATE 1: AGE GATE ── */
+  #state-agegate {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--black);
+    z-index: 1000;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .agegate-monogram {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 48px;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+  }
+
+  .agegate-rule {
+    width: 80px;
+    height: 1px;
+    background: var(--gold);
+    margin-top: 16px;
+  }
+
+  .agegate-legal {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 300;
+    font-size: 13px;
+    color: var(--text-muted);
+    letter-spacing: 0.2em;
+    margin-top: 32px;
+    text-align: center;
+  }
+
+  .agegate-question {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-style: italic;
+    font-size: 28px;
+    color: var(--text-primary);
+    margin-top: 16px;
+    text-align: center;
+  }
+
+  .agegate-buttons {
+    display: flex;
+    gap: 16px;
+    margin-top: 40px;
+  }
+
+  .btn-age-yes {
+    background: var(--black);
+    border: 1px solid var(--gold);
+    font-family: 'Raleway', sans-serif;
+    font-weight: 400;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    padding: 14px 48px;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  .btn-age-yes:hover {
+    background: var(--gold);
+    color: var(--black);
+  }
+
+  .btn-age-no {
+    background: transparent;
+    border: 1px solid #2A2520;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 400;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #3A3530;
+    padding: 14px 48px;
+    transition: border-color 0.3s, color 0.3s;
+  }
+
+  .btn-age-no:hover {
+    border-color: var(--text-muted);
+    color: var(--text-muted);
+  }
+
+  /* ── STATE 2: PRODUCT LISTING ── */
+  #state-listing {
+    min-height: 100vh;
+  }
+
+  .listing-hero {
+    padding: 60px 0 40px;
+    text-align: center;
+    margin-top: 60px;
+  }
+
+  .listing-hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 64px;
+    color: var(--gold);
+    letter-spacing: 0.15em;
+  }
+
+  .listing-hero-sub {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 300;
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.3em;
+    margin-top: 12px;
+    text-transform: uppercase;
+  }
+
+  .listing-hero-rule {
+    width: 120px;
+    height: 1px;
+    background: var(--gold);
+    margin: 20px auto 0;
+  }
+
+  .product-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px 80px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+  }
+
+  .product-card {
+    background: var(--surface);
+    padding: 40px;
+    position: relative;
+    border: 1px solid transparent;
+    transition: border-color 0.2s;
+  }
+
+  .product-card:hover {
+    border-color: var(--gold);
+  }
+
+  .product-expression {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 400;
+    font-size: 9px;
+    color: #3A3530;
+    letter-spacing: 0.5em;
+    text-transform: uppercase;
+  }
+
+  .product-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-style: italic;
+    font-size: 36px;
+    color: var(--text-primary);
+    margin-top: 12px;
+    line-height: 1.1;
+  }
+
+  .product-age-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 56px;
+    color: var(--gold);
+    margin-top: 8px;
+    line-height: 1;
+  }
+
+  .product-age-label {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 400;
+    font-size: 9px;
+    color: var(--text-muted);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+  }
+
+  .product-segment {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 400;
+    font-size: 9px;
+    color: var(--text-muted);
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .product-rule {
+    width: 40px;
+    height: 1px;
+    background: var(--gold);
+    margin-top: 20px;
+  }
+
+  .product-notes {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 300;
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 2;
+    margin-top: 16px;
+  }
+
+  .product-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 28px;
+    color: var(--text-primary);
+    margin-top: 24px;
+  }
+
+  .product-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .btn-add-cart {
+    border: 1px solid var(--gold);
+    font-family: 'Raleway', sans-serif;
+    font-weight: 400;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    padding: 12px 24px;
+    background: var(--black);
+    transition: background 0.3s, color 0.3s;
+  }
+
+  .btn-add-cart:hover {
+    background: var(--gold);
+    color: var(--black);
+  }
+
+  .btn-view-details {
+    border: 1px solid #2A2520;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 400;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #3A3530;
+    padding: 12px 24px;
+    background: transparent;
+    transition: border-color 0.3s, color 0.3s;
+  }
+
+  .btn-view-details:hover {
+    border-color: var(--text-muted);
+    color: var(--text-muted);
+  }
+
+  /* ── STATE 3: PRODUCT DETAIL ── */
+  #state-detail {
+    min-height: 100vh;
+  }
+
+  .detail-back {
+    display: block;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 400;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-decoration: none;
+    padding: 40px 6%;
+    transition: color 0.3s;
+  }
+
+  .detail-back:hover {
+    color: var(--gold);
+  }
+
+  .detail-layout {
+    display: flex;
+    min-height: 80vh;
+    padding: 40px 6% 80px;
+  }
+
+  .detail-left {
+    width: 50%;
+    padding-right: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+  }
+
+  .detail-divider {
+    width: 1px;
+    background: rgba(201,168,76,0.2);
+    flex-shrink: 0;
+    align-self: stretch;
+  }
+
+  .detail-right {
+    width: 50%;
+    padding-left: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .detail-age-bg {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 180px;
+    color: var(--gold);
+    opacity: 0.15;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    line-height: 1;
+    user-select: none;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .detail-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  .detail-product-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-style: italic;
+    font-size: 52px;
+    color: var(--text-primary);
+    line-height: 1.1;
+  }
+
+  .detail-segment {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 400;
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    margin-top: 8px;
+  }
+
+  .detail-rule {
+    width: 60px;
+    height: 1px;
+    background: var(--gold);
+    margin-top: 20px;
+  }
+
+  .detail-description {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 300;
+    font-size: 15px;
+    color: #8B8580;
+    line-height: 2;
+    margin-top: 24px;
+  }
+
+  .detail-label {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 400;
+    font-size: 9px;
+    color: var(--text-muted);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-top: 32px;
+  }
+
+  .detail-label-small {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 400;
+    font-size: 9px;
+    color: var(--text-muted);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-top: 24px;
+  }
+
+  .detail-note-line {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 300;
+    font-size: 14px;
+    color: var(--text-primary);
+    margin-top: 8px;
+  }
+
+  .detail-value {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 300;
+    font-size: 14px;
+    color: var(--text-primary);
+    margin-top: 4px;
+  }
+
+  .detail-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 52px;
+    color: var(--text-primary);
+  }
+
+  .detail-per-bottle {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 300;
+    font-size: 11px;
+    color: #3A3530;
+    margin-top: 4px;
+  }
+
+  .detail-qty-label {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 400;
+    font-size: 9px;
+    color: var(--text-muted);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-top: 32px;
+    margin-bottom: 12px;
+  }
+
+  .qty-buttons {
+    display: flex;
+    gap: 8px;
+  }
+
+  .btn-qty {
+    width: 56px;
+    height: 44px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 18px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .btn-qty.active {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  .btn-add-cart-detail {
+    width: 100%;
+    border: 1px solid var(--gold);
+    font-family: 'Raleway', sans-serif;
+    font-weight: 400;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    height: 52px;
+    background: var(--black);
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  .btn-add-cart-detail:hover {
+    background: var(--gold);
+    color: var(--black);
+  }
+
+  .detail-wishlist {
+    display: block;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 400;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: #3A3530;
+    text-align: center;
+    margin-top: 16px;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .detail-wishlist:hover {
+    color: var(--text-muted);
+  }
+
+  .detail-shipping {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 300;
+    font-size: 11px;
+    color: #3A3530;
+    line-height: 2;
+    margin-top: 32px;
+  }
+
+  /* ── STATE 4: CART ── */
+  #state-cart {
+    min-height: 100vh;
+  }
+
+  .cart-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 80px 40px;
+    margin-top: 60px;
+  }
+
+  .cart-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 52px;
+    color: var(--gold);
+  }
+
+  .cart-title-rule {
+    width: 100%;
+    height: 1px;
+    background: var(--gold);
+    margin-top: 20px;
+  }
+
+  .cart-items-list {
+    margin-top: 0;
+  }
+
+  .cart-item-row {
+    display: flex;
+    align-items: center;
+    padding: 28px 0;
+    border-bottom: 1px solid var(--border);
+    gap: 20px;
+  }
+
+  .cart-item-info {
+    flex: 1;
+  }
+
+  .cart-item-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-style: italic;
+    font-size: 22px;
+    color: var(--text-primary);
+  }
+
+  .cart-item-meta {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 300;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  .cart-qty-control {
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+
+  .btn-qty-minus,
+  .btn-qty-plus {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #2A2520;
+    background: transparent;
+    font-family: 'Raleway', sans-serif;
+    font-size: 14px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .btn-qty-minus:hover,
+  .btn-qty-plus:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  .cart-qty-display {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    color: var(--text-primary);
+    padding: 0 16px;
+    min-width: 50px;
+    text-align: center;
+  }
+
+  .cart-item-price-block {
+    text-align: right;
+  }
+
+  .cart-item-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 22px;
+    color: var(--gold);
+  }
+
+  .cart-item-remove {
+    display: block;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 400;
+    font-size: 8px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #3A3530;
+    margin-top: 6px;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .cart-item-remove:hover {
+    color: var(--gold);
+  }
+
+  .cart-totals {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-top: 32px;
+  }
+
+  .cart-total-row {
+    display: flex;
+    align-items: baseline;
+    gap: 24px;
+    margin-top: 16px;
+  }
+
+  .cart-total-row:first-child {
+    margin-top: 0;
+  }
+
+  .cart-total-label {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 400;
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+  }
+
+  .cart-total-amount {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 28px;
+    color: var(--text-primary);
+  }
+
+  .cart-total-amount.gold {
+    color: var(--gold);
+  }
+
+  .cart-total-amount.big {
+    font-size: 36px;
+    color: var(--gold);
+  }
+
+  .cart-total-rule {
+    width: 100%;
+    height: 1px;
+    background: var(--border);
+    margin-top: 20px;
+    align-self: stretch;
+  }
+
+  .btn-checkout {
+    display: block;
+    width: 100%;
+    border: 1px solid var(--gold);
+    font-family: 'Raleway', sans-serif;
+    font-weight: 400;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    padding: 18px;
+    background: var(--black);
+    text-align: center;
+    margin-top: 32px;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  .btn-checkout:hover {
+    background: var(--gold);
+    color: var(--black);
+  }
+
+  .btn-continue {
+    display: block;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 400;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: #3A3530;
+    text-align: center;
+    margin-top: 16px;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .btn-continue:hover {
+    color: var(--text-muted);
+  }
+
+  .cart-empty {
+    text-align: center;
+    padding: 80px 0;
+  }
+
+  .cart-empty-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-style: italic;
+    font-size: 28px;
+    color: var(--text-muted);
+  }
+
+  .btn-explore {
+    display: inline-block;
+    border: 1px solid var(--gold);
+    font-family: 'Raleway', sans-serif;
+    font-weight: 400;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    padding: 14px 40px;
+    background: var(--black);
+    margin-top: 32px;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  .btn-explore:hover {
+    background: var(--gold);
+    color: var(--black);
+  }
+
+  /* ── STATE 5: CHECKOUT ── */
+  #state-checkout {
+    min-height: 100vh;
+  }
+
+  .checkout-inner {
+    padding: 80px 6%;
+    display: flex;
+    gap: 0;
+    margin-top: 60px;
+  }
+
+  .checkout-form-col {
+    width: 58%;
+    padding-right: 60px;
+  }
+
+  .checkout-divider {
+    width: 1px;
+    background: rgba(201,168,76,0.2);
+    flex-shrink: 0;
+    align-self: stretch;
+  }
+
+  .checkout-summary-col {
+    width: 42%;
+    padding-left: 60px;
+    position: sticky;
+    top: 100px;
+    align-self: flex-start;
+  }
+
+  .checkout-section-label {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 400;
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+
+  .checkout-section-label.mt {
+    margin-top: 40px;
+  }
+
+  .form-row {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+  }
+
+  .form-row:first-of-type {
+    margin-top: 0;
+  }
+
+  .form-field {
+    flex: 1;
+    display: block;
+  }
+
+  .form-input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #2A2520;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 300;
+    font-size: 14px;
+    color: var(--text-primary);
+    padding: 14px 0;
+    width: 100%;
+    outline: none;
+    display: block;
+    transition: border-bottom-color 0.3s;
+  }
+
+  .form-input::placeholder {
+    color: #3A3530;
+  }
+
+  .form-input:focus {
+    border-bottom-color: var(--gold);
+  }
+
+  .form-input.error {
+    border-bottom: 1px solid #8B0000;
+    animation: shake 0.4s ease;
+  }
+
+  @keyframes shake {
+    0%   { transform: translateX(0); }
+    20%  { transform: translateX(6px); }
+    40%  { transform: translateX(-6px); }
+    60%  { transform: translateX(6px); }
+    80%  { transform: translateX(-6px); }
+    100% { transform: translateX(0); }
+  }
+
+  .payment-note {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 300;
+    font-size: 12px;
+    color: #3A3530;
+    margin-bottom: 24px;
+  }
+
+  .btn-place-order {
+    display: block;
+    width: 100%;
+    border: 1px solid var(--gold);
+    font-family: 'Raleway', sans-serif;
+    font-weight: 400;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    padding: 18px;
+    background: var(--black);
+    text-align: center;
+    margin-top: 40px;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  .btn-place-order:hover {
+    background: var(--gold);
+    color: var(--black);
+  }
+
+  .summary-title {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 400;
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+
+  .summary-item {
+    margin-top: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .summary-item:last-of-type {
+    border-bottom: none;
+  }
+
+  .summary-item-name {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 300;
+    font-size: 13px;
+    color: var(--text-primary);
+  }
+
+  .summary-item-meta {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 300;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 8px;
+  }
+
+  .summary-total-section {
+    margin-top: 24px;
+  }
+
+  .summary-total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-top: 12px;
+  }
+
+  .summary-total-label {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 400;
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .summary-total-amount {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 22px;
+    color: var(--text-primary);
+  }
+
+  .summary-total-amount.gold {
+    color: var(--gold);
+    font-size: 14px;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .summary-total-amount.big {
+    font-size: 32px;
+    color: var(--gold);
+  }
+
+  .summary-rule {
+    width: 100%;
+    height: 1px;
+    background: var(--border);
+    margin-top: 16px;
+  }
+
+  /* ── STATE 6: CONFIRMATION ── */
+  #state-confirmation {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 0 24px;
+  }
+
+  .confirm-check-svg {
+    width: 64px;
+    height: 64px;
+  }
+
+  .confirm-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-style: italic;
+    font-size: 52px;
+    color: var(--text-primary);
+    margin-top: 32px;
+    opacity: 0;
+    text-align: center;
+  }
+
+  .confirm-sub {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 300;
+    font-size: 14px;
+    color: var(--text-muted);
+    max-width: 480px;
+    text-align: center;
+    margin-top: 20px;
+    line-height: 2;
+    opacity: 0;
+  }
+
+  .confirm-ref {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 18px;
+    color: var(--gold);
+    margin-top: 24px;
+    opacity: 0;
+    letter-spacing: 0.05em;
+  }
+
+  .btn-return {
+    display: inline-block;
+    border: 1px solid var(--gold);
+    font-family: 'Raleway', sans-serif;
+    font-weight: 400;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    padding: 14px 40px;
+    background: var(--black);
+    margin-top: 40px;
+    opacity: 0;
+    text-decoration: none;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  .btn-return:hover {
+    background: var(--gold);
+    color: var(--black);
+  }
+
+  /* ── FOOTER ── */
+  .shop-footer {
+    background: var(--black);
+    border-top: 1px solid var(--gold);
+    padding: 40px 60px;
+  }
+
+  .footer-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 22px;
+    color: var(--gold);
+  }
+
+  .footer-est {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 300;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .footer-drink {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 300;
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+
+  .footer-copy {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 300;
+    font-size: 10px;
+    color: #3A3530;
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  /* ── TOAST ── */
+  .shop-toast {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--black);
+    border: 1px solid var(--gold);
+    padding: 12px 24px;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 300;
+    font-size: 13px;
+    color: var(--gold);
+    z-index: 9998;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  /* ── MOBILE RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .shop-nav {
+      padding: 0 20px;
+    }
+
+    .nav-links {
+      gap: 16px;
+    }
+
+    .nav-links li:not(:last-child):not(:nth-last-child(2)) {
+      display: none;
+    }
+
+    .listing-hero-title {
+      font-size: 40px;
+    }
+
+    .product-grid {
+      grid-template-columns: 1fr;
+      padding: 0 20px 60px;
+    }
+
+    .detail-layout {
+      flex-direction: column;
+      padding: 20px 6% 60px;
+    }
+
+    .detail-left {
+      width: 100%;
+      padding-right: 0;
+      padding-bottom: 40px;
+    }
+
+    .detail-divider {
+      width: 100%;
+      height: 1px;
+      align-self: auto;
+    }
+
+    .detail-right {
+      width: 100%;
+      padding-left: 0;
+      padding-top: 40px;
+    }
+
+    .detail-age-bg {
+      font-size: 100px;
+    }
+
+    .checkout-inner {
+      flex-direction: column;
+      padding: 40px 20px;
+    }
+
+    .checkout-form-col {
+      width: 100%;
+      padding-right: 0;
+      padding-bottom: 40px;
+    }
+
+    .checkout-divider {
+      width: 100%;
+      height: 1px;
+      margin: 0;
+    }
+
+    .checkout-summary-col {
+      width: 100%;
+      padding-left: 0;
+      padding-top: 40px;
+      position: static;
+    }
+
+    .cart-inner {
+      padding: 40px 20px;
+    }
+
+    .cart-item-row {
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .shop-footer {
+      padding: 30px 20px;
+    }
+
+    .footer-main {
+      flex-direction: column;
+      gap: 12px;
+      text-align: center;
+    }
+
+    .agegate-buttons {
+      flex-direction: column;
+    }
+
+    .form-row {
+      flex-direction: column;
+      gap: 0;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- CROSSHAIR -->
+<div id="crosshair">
+  <div class="ch-dot"></div>
+  <div class="ch-line ch-top"></div>
+  <div class="ch-line ch-bottom"></div>
+  <div class="ch-line ch-left"></div>
+  <div class="ch-line ch-right"></div>
+</div>
+
+<!-- NAV (shared across listing/detail/cart/checkout) -->
+<nav class="shop-nav" id="shop-nav" style="display:none;">
+  <a href="index.html" class="nav-logo">B&amp;C</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Back to Site</a></li>
+    <li><a href="#" id="nav-collection-link">The Collection</a></li>
+    <li class="nav-cart-wrap">
+      <a href="#" id="nav-cart-link">Cart</a>
+      <span id="cart-badge">0</span>
+    </li>
+  </ul>
+</nav>
+
+<!-- STATE 1: AGE GATE -->
+<div id="state-agegate" class="shop-state">
+  <div class="agegate-monogram">B&amp;C</div>
+  <div class="agegate-rule"></div>
+  <p class="agegate-legal">You must be of legal drinking age to enter.</p>
+  <p class="agegate-question">Are you 21 or older?</p>
+  <div class="agegate-buttons">
+    <button class="btn-age-yes" id="btn-yes">Yes, Enter</button>
+    <button class="btn-age-no" id="btn-no">No, Exit</button>
+  </div>
+</div>
+
+<!-- STATE 2: PRODUCT LISTING -->
+<div id="state-listing" class="shop-state">
+  <div class="listing-hero">
+    <h1 class="listing-hero-title">The Collection</h1>
+    <p class="listing-hero-sub">Four expressions. Each a decade in the making.</p>
+    <div class="listing-hero-rule"></div>
+  </div>
+  <div class="product-grid" id="product-grid"></div>
+  <footer class="shop-footer">
+    <div class="footer-main">
+      <span class="footer-brand">Blackthorn &amp; Co.</span>
+      <span class="footer-est">Est. 1897 — Highlands, Scotland</span>
+      <span class="footer-drink">Drink Responsibly.</span>
+    </div>
+    <p class="footer-copy">© 2025 Blackthorn &amp; Co. All rights reserved.</p>
+  </footer>
+</div>
+
+<!-- STATE 3: PRODUCT DETAIL -->
+<div id="state-detail" class="shop-state">
+  <a href="#" class="detail-back" id="detail-back-link">&#8592; The Collection</a>
+  <div class="detail-layout">
+    <div class="detail-left">
+      <div class="detail-age-bg" id="detail-age-bg"></div>
+      <div class="detail-content">
+        <h2 class="detail-product-name" id="detail-name"></h2>
+        <p class="detail-segment" id="detail-segment"></p>
+        <div class="detail-rule"></div>
+        <p class="detail-description" id="detail-description"></p>
+        <p class="detail-label">Tasting Notes</p>
+        <div id="detail-notes-list"></div>
+        <p class="detail-label-small">Aged</p>
+        <p class="detail-value" id="detail-aged"></p>
+        <p class="detail-label-small">Distillery</p>
+        <p class="detail-value">Blackthorn &amp; Co., Highlands, Scotland</p>
+      </div>
+    </div>
+    <div class="detail-divider"></div>
+    <div class="detail-right">
+      <p class="detail-price" id="detail-price"></p>
+      <p class="detail-per-bottle">per bottle, 750ml</p>
+      <p class="detail-qty-label">Quantity</p>
+      <div class="qty-buttons" id="qty-buttons">
+        <button class="btn-qty active" data-qty="1">01</button>
+        <button class="btn-qty" data-qty="2">02</button>
+        <button class="btn-qty" data-qty="3">03</button>
+      </div>
+      <button class="btn-add-cart-detail" id="detail-add-cart">Add to Cart</button>
+      <a href="#" class="detail-wishlist">Add to Wishlist</a>
+      <p class="detail-shipping">
+        Free US shipping on all orders.<br>
+        Dispatched within 3 business days.<br>
+        Each bottle is hand-inspected before dispatch.
+      </p>
+    </div>
+  </div>
+  <footer class="shop-footer">
+    <div class="footer-main">
+      <span class="footer-brand">Blackthorn &amp; Co.</span>
+      <span class="footer-est">Est. 1897 — Highlands, Scotland</span>
+      <span class="footer-drink">Drink Responsibly.</span>
+    </div>
+    <p class="footer-copy">© 2025 Blackthorn &amp; Co. All rights reserved.</p>
+  </footer>
+</div>
+
+<!-- STATE 4: CART -->
+<div id="state-cart" class="shop-state">
+  <div class="cart-inner">
+    <h2 class="cart-title">Your Order</h2>
+    <div class="cart-title-rule"></div>
+    <div id="cart-content"></div>
+  </div>
+  <footer class="shop-footer">
+    <div class="footer-main">
+      <span class="footer-brand">Blackthorn &amp; Co.</span>
+      <span class="footer-est">Est. 1897 — Highlands, Scotland</span>
+      <span class="footer-drink">Drink Responsibly.</span>
+    </div>
+    <p class="footer-copy">© 2025 Blackthorn &amp; Co. All rights reserved.</p>
+  </footer>
+</div>
+
+<!-- STATE 5: CHECKOUT -->
+<div id="state-checkout" class="shop-state">
+  <div class="checkout-inner">
+    <div class="checkout-form-col">
+      <p class="checkout-section-label">Your Details</p>
+      <div class="form-row">
+        <label class="form-field">
+          <input class="form-input" type="text" id="f-firstname" placeholder="First name" autocomplete="given-name">
+        </label>
+        <label class="form-field">
+          <input class="form-input" type="text" id="f-lastname" placeholder="Last name" autocomplete="family-name">
+        </label>
+      </div>
+      <div class="form-row">
+        <label class="form-field" style="flex:1;">
+          <input class="form-input" type="email" id="f-email" placeholder="Email address" autocomplete="email">
+        </label>
+      </div>
+      <div class="form-row">
+        <label class="form-field" style="flex:1;">
+          <input class="form-input" type="tel" id="f-phone" placeholder="Phone number" autocomplete="tel">
+        </label>
+      </div>
+
+      <p class="checkout-section-label mt">Delivery Address</p>
+      <div class="form-row">
+        <label class="form-field" style="flex:1;">
+          <input class="form-input" type="text" id="f-street" placeholder="Street address" autocomplete="street-address">
+        </label>
+      </div>
+      <div class="form-row">
+        <label class="form-field">
+          <input class="form-input" type="text" id="f-city" placeholder="City" autocomplete="address-level2">
+        </label>
+        <label class="form-field">
+          <input class="form-input" type="text" id="f-state" placeholder="State" autocomplete="address-level1">
+        </label>
+      </div>
+      <div class="form-row">
+        <label class="form-field">
+          <input class="form-input" type="text" id="f-zip" placeholder="ZIP code" autocomplete="postal-code">
+        </label>
+        <label class="form-field">
+          <input class="form-input" type="text" id="f-country" placeholder="Country" value="United States" autocomplete="country-name">
+        </label>
+      </div>
+
+      <p class="checkout-section-label mt">Payment</p>
+      <p class="payment-note">Payment processing is simulated. No real charges will be made.</p>
+      <div class="form-row">
+        <label class="form-field" style="flex:1;">
+          <input class="form-input" type="text" id="f-card" placeholder="Card number" maxlength="19">
+        </label>
+      </div>
+      <div class="form-row">
+        <label class="form-field">
+          <input class="form-input" type="text" id="f-expiry" placeholder="MM/YY" maxlength="5">
+        </label>
+        <label class="form-field">
+          <input class="form-input" type="text" id="f-cvv" placeholder="CVV" maxlength="4">
+        </label>
+      </div>
+      <div class="form-row">
+        <label class="form-field" style="flex:1;">
+          <input class="form-input" type="text" id="f-cardname" placeholder="Name on card">
+        </label>
+      </div>
+
+      <button class="btn-place-order" id="btn-place-order">Place Order</button>
+    </div>
+
+    <div class="checkout-divider"></div>
+
+    <div class="checkout-summary-col">
+      <p class="summary-title">Order Summary</p>
+      <div id="checkout-summary-items"></div>
+      <div class="summary-total-section" id="checkout-summary-totals"></div>
+    </div>
+  </div>
+  <footer class="shop-footer">
+    <div class="footer-main">
+      <span class="footer-brand">Blackthorn &amp; Co.</span>
+      <span class="footer-est">Est. 1897 — Highlands, Scotland</span>
+      <span class="footer-drink">Drink Responsibly.</span>
+    </div>
+    <p class="footer-copy">© 2025 Blackthorn &amp; Co. All rights reserved.</p>
+  </footer>
+</div>
+
+<!-- STATE 6: CONFIRMATION -->
+<div id="state-confirmation" class="shop-state">
+  <svg class="confirm-check-svg" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle id="confirm-circle" cx="32" cy="32" r="28" stroke="#C9A84C" stroke-width="1.5" fill="none"
+      stroke-dasharray="175.93" stroke-dashoffset="175.93"/>
+    <path id="confirm-check" d="M20 32 L28 40 L44 24" stroke="#C9A84C" stroke-width="1.5" fill="none"
+      stroke-dasharray="35" stroke-dashoffset="35"/>
+  </svg>
+  <h2 class="confirm-title">Order Received.</h2>
+  <p class="confirm-sub">Your order has been placed. Our estate will be in touch within 24 hours to confirm dispatch.</p>
+  <p class="confirm-ref" id="confirm-ref">ORDER REF: BC-XXXXXX</p>
+  <a href="index.html" class="btn-return">Return to Site</a>
+</div>
+
+<!-- GSAP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ═══════════════════════════════════════════════
+     DATA
+  ═══════════════════════════════════════════════ */
+  const PRODUCTS = [
+    {
+      id: 'obsidian',
+      num: '01',
+      name: 'The Obsidian',
+      age: '08',
+      ageNum: 8,
+      segment: 'Entry Collection',
+      notes: 'Vanilla, toasted oak, dried apricot.',
+      notesList: ['Vanilla', 'Toasted oak', 'Dried apricot'],
+      price: 185,
+      priceDisplay: '$185',
+      description: 'Laid down in American oak casks at the peak of Highland summer, The Obsidian marks the entry point into the Blackthorn estate. Eight years of patient maturation have produced a whiskey of remarkable clarity and warmth. Vanilla extracted from virgin wood meets a backbone of toasted oak, rounded by the gentle sweetness of dried apricot. It is the beginning of a conversation that never truly ends.'
+    },
+    {
+      id: 'ember',
+      num: '02',
+      name: 'The Ember',
+      age: '12',
+      ageNum: 12,
+      segment: 'Reserve',
+      notes: 'Dark caramel, smoked cherry, hints of leather.',
+      notesList: ['Dark caramel', 'Smoked cherry', 'Hints of leather'],
+      price: 320,
+      priceDisplay: '$320',
+      description: 'The Ember is named for the quality of its colour and the slow, enduring heat it carries. Twelve years in hand-selected sherry casks have produced a whiskey of brooding depth and rare complexity. Dark caramel yields to the aromatic edge of smoked cherry, with a finish of aged leather that lingers long after the glass is set down. A Reserve expression in every sense.'
+    },
+    {
+      id: 'sovereign',
+      num: '03',
+      name: 'The Sovereign',
+      age: '18',
+      ageNum: 18,
+      segment: 'Grand Reserve',
+      notes: 'Dark chocolate, aged tobacco, sea salt finish.',
+      notesList: ['Dark chocolate', 'Aged tobacco', 'Sea salt finish'],
+      price: 580,
+      priceDisplay: '$580',
+      description: 'At eighteen years, The Sovereign earns its name. This Grand Reserve expression represents the first point at which Blackthorn & Co. considers a whiskey truly complete. Dark chocolate and the dry, aromatic quality of aged tobacco define the opening, before a precise pinch of sea salt arrives at the finish — unexpected, and entirely intentional. One of the estate\'s most decorated expressions.'
+    },
+    {
+      id: 'covenant',
+      num: '04',
+      name: 'The Covenant',
+      age: '25',
+      ageNum: 25,
+      segment: 'Prestige',
+      notes: 'Dried fig, walnut oil, ancient oak, cedar smoke.',
+      notesList: ['Dried fig', 'Walnut oil', 'Ancient oak & cedar smoke'],
+      price: 1200,
+      priceDisplay: '$1,200',
+      description: 'The Covenant is the distillery\'s statement of purpose — aged twenty-five years in the rarest Oloroso sherry casks, then finished in Portuguese oak. It is a whiskey of ceremony: slow, deliberate, and impossible to rush. Dried fig and walnut oil open with unhurried gravity, followed by ancient oak and the faintest trace of cedar smoke rising on the close. To open a bottle of The Covenant is to mark an occasion.'
+    }
+  ];
+
+  /* ═══════════════════════════════════════════════
+     CROSSHAIR
+  ═══════════════════════════════════════════════ */
+  const crosshair = document.getElementById('crosshair');
+  let mouseX = 0, mouseY = 0;
+  let posX = 0, posY = 0;
+  let crosshairVisible = false;
+
+  gsap.ticker.add(() => {
+    posX += (mouseX - posX) * 0.15;
+    posY += (mouseY - posY) * 0.15;
+    gsap.set(crosshair, { x: posX, y: posY });
+  });
+
+  document.addEventListener('mousemove', function onFirstMove(e) {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    if (!crosshairVisible) {
+      crosshairVisible = true;
+      gsap.to(crosshair, { opacity: 1, duration: 0.5 });
+    }
+    document.removeEventListener('mousemove', onFirstMove);
+    document.addEventListener('mousemove', (ev) => {
+      mouseX = ev.clientX;
+      mouseY = ev.clientY;
+    });
+  });
+
+  document.addEventListener('mouseover', (e) => {
+    const target = e.target.closest('a, button, input, select');
+    if (target) {
+      crosshair.classList.add('crosshair--active');
+    } else {
+      crosshair.classList.remove('crosshair--active');
+    }
+  });
+
+  document.addEventListener('mouseout', (e) => {
+    if (!e.relatedTarget || !e.relatedTarget.closest('a, button, input, select')) {
+      crosshair.classList.remove('crosshair--active');
+    }
+  });
+
+  /* ═══════════════════════════════════════════════
+     STATE MANAGEMENT
+  ═══════════════════════════════════════════════ */
+  let currentState = null;
+  const nav = document.getElementById('shop-nav');
+  const statesWithNav = ['state-listing', 'state-detail', 'state-cart', 'state-checkout'];
+
+  function switchState(newId) {
+    const nextEl = document.getElementById(newId);
+    if (!nextEl) return;
+
+    if (currentState && currentState !== newId) {
+      const currentEl = document.getElementById(currentState);
+      gsap.to(currentEl, {
+        opacity: 0,
+        duration: 0.3,
+        onComplete: () => {
+          currentEl.style.display = 'none';
+          currentEl.style.opacity = '';
+          showState(newId, nextEl);
+        }
+      });
+    } else {
+      showState(newId, nextEl);
+    }
+  }
+
+  function showState(id, el) {
+    currentState = id;
+
+    // Handle nav visibility
+    if (statesWithNav.includes(id)) {
+      nav.style.display = 'flex';
+    } else {
+      nav.style.display = 'none';
+    }
+
+    // Special display types
+    if (id === 'state-agegate') {
+      el.style.display = 'flex';
+    } else if (id === 'state-confirmation') {
+      el.style.display = 'flex';
+    } else {
+      el.style.display = 'block';
+    }
+
+    el.style.opacity = '0';
+    gsap.to(el, { opacity: 1, duration: 0.4 });
+
+    // State-specific init
+    if (id === 'state-cart') renderCart();
+    if (id === 'state-checkout') renderCheckoutSummary();
+    if (id === 'state-confirmation') animateConfirmation();
+
+    // Scroll to top
+    window.scrollTo(0, 0);
+  }
+
+  /* ═══════════════════════════════════════════════
+     CART UTILITIES
+  ═══════════════════════════════════════════════ */
+  function getCart() {
+    try {
+      return JSON.parse(localStorage.getItem('bc_cart')) || [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveCart(cart) {
+    localStorage.setItem('bc_cart', JSON.stringify(cart));
+  }
+
+  function cartTotal(cart) {
+    return cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  }
+
+  function formatPrice(n) {
+    return '$' + n.toLocaleString('en-US');
+  }
+
+  function updateCartBadge() {
+    const cart = getCart();
+    const total = cart.reduce((sum, item) => sum + item.quantity, 0);
+    const badge = document.getElementById('cart-badge');
+    if (total > 0) {
+      badge.textContent = total;
+      badge.style.display = 'flex';
+    } else {
+      badge.style.display = 'none';
+    }
+  }
+
+  function addToCart(productId, quantity) {
+    const product = PRODUCTS.find(p => p.id === productId);
+    if (!product) return;
+
+    const cart = getCart();
+    const existing = cart.find(item => item.id === productId);
+    if (existing) {
+      existing.quantity += quantity;
+    } else {
+      cart.push({
+        id: product.id,
+        name: product.name,
+        age: product.ageNum,
+        segment: product.segment,
+        price: product.price,
+        priceDisplay: product.priceDisplay,
+        quantity: quantity
+      });
+    }
+    saveCart(cart);
+    updateCartBadge();
+    showToast('Added to your order.');
+  }
+
+  function showToast(message) {
+    const toast = document.createElement('div');
+    toast.className = 'shop-toast';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+
+    gsap.fromTo(toast, { opacity: 0 }, {
+      opacity: 1,
+      duration: 0.3,
+      onComplete: () => {
+        setTimeout(() => {
+          gsap.to(toast, {
+            opacity: 0,
+            duration: 0.3,
+            onComplete: () => toast.remove()
+          });
+        }, 1500);
+      }
+    });
+  }
+
+  /* ═══════════════════════════════════════════════
+     RENDER PRODUCT GRID
+  ═══════════════════════════════════════════════ */
+  function renderProductGrid() {
+    const grid = document.getElementById('product-grid');
+    grid.innerHTML = '';
+
+    PRODUCTS.forEach(product => {
+      const card = document.createElement('div');
+      card.className = 'product-card';
+      card.innerHTML = `
+        <p class="product-expression">Expression ${product.num}</p>
+        <h2 class="product-name">${product.name}</h2>
+        <div class="product-age-number">${product.age}</div>
+        <p class="product-age-label">Years</p>
+        <p class="product-segment">${product.segment}</p>
+        <div class="product-rule"></div>
+        <p class="product-notes">${product.notes}</p>
+        <p class="product-price">${product.priceDisplay}</p>
+        <div class="product-actions">
+          <button class="btn-add-cart" data-id="${product.id}">Add to Cart</button>
+          <button class="btn-view-details" data-id="${product.id}">View Details</button>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+
+    grid.addEventListener('click', (e) => {
+      const addBtn = e.target.closest('.btn-add-cart');
+      const detailBtn = e.target.closest('.btn-view-details');
+
+      if (addBtn) {
+        addToCart(addBtn.dataset.id, 1);
+      }
+      if (detailBtn) {
+        renderDetail(detailBtn.dataset.id);
+        switchState('state-detail');
+      }
+    });
+  }
+
+  /* ═══════════════════════════════════════════════
+     RENDER PRODUCT DETAIL
+  ═══════════════════════════════════════════════ */
+  let currentDetailProduct = null;
+  let selectedQty = 1;
+
+  function renderDetail(productId) {
+    const product = PRODUCTS.find(p => p.id === productId);
+    if (!product) return;
+    currentDetailProduct = product;
+    selectedQty = 1;
+
+    document.getElementById('detail-age-bg').textContent = product.age;
+    document.getElementById('detail-name').textContent = product.name;
+    document.getElementById('detail-segment').textContent = product.segment;
+    document.getElementById('detail-description').textContent = product.description;
+    document.getElementById('detail-price').textContent = product.priceDisplay;
+    document.getElementById('detail-aged').textContent = product.ageNum + ' Years';
+
+    const notesList = document.getElementById('detail-notes-list');
+    notesList.innerHTML = '';
+    product.notesList.forEach(note => {
+      const p = document.createElement('p');
+      p.className = 'detail-note-line';
+      p.textContent = '— ' + note;
+      notesList.appendChild(p);
+    });
+
+    // Reset qty buttons
+    const qtyBtns = document.querySelectorAll('.btn-qty');
+    qtyBtns.forEach(btn => {
+      btn.classList.toggle('active', parseInt(btn.dataset.qty) === 1);
+    });
+  }
+
+  // Qty button logic
+  document.getElementById('qty-buttons').addEventListener('click', (e) => {
+    const btn = e.target.closest('.btn-qty');
+    if (!btn) return;
+    selectedQty = parseInt(btn.dataset.qty);
+    document.querySelectorAll('.btn-qty').forEach(b => {
+      b.classList.toggle('active', b === btn);
+    });
+  });
+
+  document.getElementById('detail-add-cart').addEventListener('click', () => {
+    if (currentDetailProduct) {
+      addToCart(currentDetailProduct.id, selectedQty);
+    }
+  });
+
+  document.getElementById('detail-back-link').addEventListener('click', (e) => {
+    e.preventDefault();
+    switchState('state-listing');
+  });
+
+  /* ═══════════════════════════════════════════════
+     RENDER CART
+  ═══════════════════════════════════════════════ */
+  function renderCart() {
+    const cart = getCart();
+    const container = document.getElementById('cart-content');
+    container.innerHTML = '';
+
+    if (cart.length === 0) {
+      container.innerHTML = `
+        <div class="cart-empty">
+          <p class="cart-empty-text">Your order is empty.</p>
+          <button class="btn-explore" id="btn-explore-collection">Explore the Collection</button>
+        </div>
+      `;
+      document.getElementById('btn-explore-collection').addEventListener('click', () => {
+        switchState('state-listing');
+      });
+      return;
+    }
+
+    const list = document.createElement('div');
+    list.className = 'cart-items-list';
+
+    cart.forEach(item => {
+      const row = document.createElement('div');
+      row.className = 'cart-item-row';
+      row.dataset.id = item.id;
+      row.innerHTML = `
+        <div class="cart-item-info">
+          <p class="cart-item-name">${item.name}</p>
+          <p class="cart-item-meta">${item.age} Year — ${item.segment}</p>
+        </div>
+        <div class="cart-qty-control">
+          <button class="btn-qty-minus" data-id="${item.id}">−</button>
+          <span class="cart-qty-display">${item.quantity}</span>
+          <button class="btn-qty-plus" data-id="${item.id}">+</button>
+        </div>
+        <div class="cart-item-price-block">
+          <p class="cart-item-price">${formatPrice(item.price * item.quantity)}</p>
+          <a href="#" class="cart-item-remove" data-id="${item.id}">Remove</a>
+        </div>
+      `;
+      list.appendChild(row);
+    });
+
+    container.appendChild(list);
+
+    // Totals
+    const subtotal = cartTotal(cart);
+    const totalsEl = document.createElement('div');
+    totalsEl.className = 'cart-totals';
+    totalsEl.innerHTML = `
+      <div class="cart-total-row">
+        <span class="cart-total-label">Subtotal</span>
+        <span class="cart-total-amount" id="cart-subtotal-display">${formatPrice(subtotal)}</span>
+      </div>
+      <div class="cart-total-row">
+        <span class="cart-total-label">Shipping</span>
+        <span class="cart-total-amount gold">Complimentary</span>
+      </div>
+      <div class="cart-total-rule"></div>
+      <div class="cart-total-row">
+        <span class="cart-total-label">Order Total</span>
+        <span class="cart-total-amount big" id="cart-total-display">${formatPrice(subtotal)}</span>
+      </div>
+    `;
+    container.appendChild(totalsEl);
+
+    const checkoutBtn = document.createElement('button');
+    checkoutBtn.className = 'btn-checkout';
+    checkoutBtn.textContent = 'Proceed to Checkout';
+    container.appendChild(checkoutBtn);
+
+    const continueLink = document.createElement('a');
+    continueLink.href = '#';
+    continueLink.className = 'btn-continue';
+    continueLink.textContent = 'Continue Shopping';
+    container.appendChild(continueLink);
+
+    // Events
+    checkoutBtn.addEventListener('click', () => switchState('state-checkout'));
+    continueLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      switchState('state-listing');
+    });
+
+    list.addEventListener('click', (e) => {
+      const minusBtn = e.target.closest('.btn-qty-minus');
+      const plusBtn = e.target.closest('.btn-qty-plus');
+      const removeLink = e.target.closest('.cart-item-remove');
+
+      if (minusBtn) {
+        e.preventDefault();
+        adjustQty(minusBtn.dataset.id, -1, list, totalsEl);
+      }
+      if (plusBtn) {
+        e.preventDefault();
+        adjustQty(plusBtn.dataset.id, 1, list, totalsEl);
+      }
+      if (removeLink) {
+        e.preventDefault();
+        removeCartItem(removeLink.dataset.id, list, totalsEl);
+      }
+    });
+  }
+
+  function adjustQty(productId, delta, listEl, totalsEl) {
+    const cart = getCart();
+    const item = cart.find(i => i.id === productId);
+    if (!item) return;
+
+    item.quantity += delta;
+    if (item.quantity <= 0) {
+      removeCartItem(productId, listEl, totalsEl);
+      return;
+    }
+
+    saveCart(cart);
+    updateCartBadge();
+
+    // Update DOM
+    const row = listEl.querySelector(`.cart-item-row[data-id="${productId}"]`);
+    if (row) {
+      row.querySelector('.cart-qty-display').textContent = item.quantity;
+      row.querySelector('.cart-item-price').textContent = formatPrice(item.price * item.quantity);
+    }
+
+    updateCartTotals(totalsEl);
+  }
+
+  function removeCartItem(productId, listEl, totalsEl) {
+    const row = listEl.querySelector(`.cart-item-row[data-id="${productId}"]`);
+    if (row) {
+      gsap.to(row, {
+        opacity: 0,
+        duration: 0.3,
+        onComplete: () => {
+          row.remove();
+          const cart = getCart().filter(i => i.id !== productId);
+          saveCart(cart);
+          updateCartBadge();
+          updateCartTotals(totalsEl);
+
+          if (cart.length === 0) {
+            renderCart();
+          }
+        }
+      });
+    }
+  }
+
+  function updateCartTotals(totalsEl) {
+    const cart = getCart();
+    const subtotal = cartTotal(cart);
+    const subEl = totalsEl.querySelector('#cart-subtotal-display');
+    const totEl = totalsEl.querySelector('#cart-total-display');
+    if (subEl) subEl.textContent = formatPrice(subtotal);
+    if (totEl) totEl.textContent = formatPrice(subtotal);
+  }
+
+  /* ═══════════════════════════════════════════════
+     RENDER CHECKOUT SUMMARY
+  ═══════════════════════════════════════════════ */
+  function renderCheckoutSummary() {
+    const cart = getCart();
+    const itemsEl = document.getElementById('checkout-summary-items');
+    const totalsEl = document.getElementById('checkout-summary-totals');
+    itemsEl.innerHTML = '';
+    totalsEl.innerHTML = '';
+
+    cart.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'summary-item';
+      div.innerHTML = `
+        <p class="summary-item-name">${item.name}</p>
+        <p class="summary-item-meta">Qty: ${item.quantity} — ${formatPrice(item.price * item.quantity)}</p>
+      `;
+      itemsEl.appendChild(div);
+    });
+
+    const subtotal = cartTotal(cart);
+    totalsEl.innerHTML = `
+      <div class="summary-rule"></div>
+      <div class="summary-total-row">
+        <span class="summary-total-label">Subtotal</span>
+        <span class="summary-total-amount">${formatPrice(subtotal)}</span>
+      </div>
+      <div class="summary-total-row">
+        <span class="summary-total-label">Shipping</span>
+        <span class="summary-total-amount gold">Complimentary</span>
+      </div>
+      <div class="summary-rule"></div>
+      <div class="summary-total-row">
+        <span class="summary-total-label">Total</span>
+        <span class="summary-total-amount big">${formatPrice(subtotal)}</span>
+      </div>
+    `;
+  }
+
+  /* ═══════════════════════════════════════════════
+     CHECKOUT VALIDATION & SUBMISSION
+  ═══════════════════════════════════════════════ */
+  const formFields = [
+    'f-firstname', 'f-lastname', 'f-email', 'f-phone',
+    'f-street', 'f-city', 'f-state', 'f-zip', 'f-country',
+    'f-card', 'f-expiry', 'f-cvv', 'f-cardname'
+  ];
+
+  document.getElementById('btn-place-order').addEventListener('click', () => {
+    let valid = true;
+
+    formFields.forEach(id => {
+      const input = document.getElementById(id);
+      if (!input) return;
+      input.classList.remove('error');
+
+      const val = input.value.trim();
+      if (!val) {
+        valid = false;
+        input.classList.add('error');
+        // Re-trigger animation by removing and re-adding class
+        void input.offsetWidth;
+        input.classList.remove('error');
+        void input.offsetWidth;
+        input.classList.add('error');
+      }
+    });
+
+    if (valid) {
+      localStorage.removeItem('bc_cart');
+      updateCartBadge();
+      switchState('state-confirmation');
+    }
+  });
+
+  // Card number formatting
+  const cardInput = document.getElementById('f-card');
+  if (cardInput) {
+    cardInput.addEventListener('input', (e) => {
+      let val = e.target.value.replace(/\D/g, '').substring(0, 16);
+      val = val.replace(/(.{4})/g, '$1 ').trim();
+      e.target.value = val;
+    });
+  }
+
+  // Expiry formatting
+  const expiryInput = document.getElementById('f-expiry');
+  if (expiryInput) {
+    expiryInput.addEventListener('input', (e) => {
+      let val = e.target.value.replace(/\D/g, '').substring(0, 4);
+      if (val.length >= 2) val = val.substring(0, 2) + '/' + val.substring(2);
+      e.target.value = val;
+    });
+  }
+
+  /* ═══════════════════════════════════════════════
+     CONFIRMATION ANIMATION
+  ═══════════════════════════════════════════════ */
+  function animateConfirmation() {
+    // Generate ref
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let ref = 'BC-';
+    for (let i = 0; i < 6; i++) ref += chars[Math.floor(Math.random() * chars.length)];
+    document.getElementById('confirm-ref').textContent = 'ORDER REF: ' + ref;
+
+    // Reset
+    const circle = document.getElementById('confirm-circle');
+    const check = document.getElementById('confirm-check');
+    const title = document.querySelector('.confirm-title');
+    const sub = document.querySelector('.confirm-sub');
+    const refEl = document.getElementById('confirm-ref');
+    const returnBtn = document.querySelector('.btn-return');
+
+    circle.style.strokeDashoffset = '175.93';
+    check.style.strokeDashoffset = '35';
+    gsap.set([title, sub, refEl, returnBtn], { opacity: 0 });
+
+    // Circle animation
+    gsap.to(circle, {
+      strokeDashoffset: 0,
+      duration: 0.8,
+      ease: 'power2.out'
+    });
+
+    // Checkmark animation
+    gsap.to(check, {
+      strokeDashoffset: 0,
+      duration: 0.4,
+      delay: 0.6,
+      ease: 'power2.out'
+    });
+
+    // Text fades
+    gsap.to(title, { opacity: 1, duration: 0.4, delay: 0.6 });
+    gsap.to(sub, { opacity: 1, duration: 0.4, delay: 1.0 });
+    gsap.to(refEl, { opacity: 1, duration: 0.4, delay: 1.2 });
+    gsap.to(returnBtn, { opacity: 1, duration: 0.4, delay: 1.4 });
+  }
+
+  /* ═══════════════════════════════════════════════
+     NAV EVENTS
+  ═══════════════════════════════════════════════ */
+  document.getElementById('nav-collection-link').addEventListener('click', (e) => {
+    e.preventDefault();
+    switchState('state-listing');
+  });
+
+  document.getElementById('nav-cart-link').addEventListener('click', (e) => {
+    e.preventDefault();
+    switchState('state-cart');
+  });
+
+  /* ═══════════════════════════════════════════════
+     AGE GATE
+  ═══════════════════════════════════════════════ */
+  document.getElementById('btn-yes').addEventListener('click', () => {
+    sessionStorage.setItem('age_verified', 'true');
+    switchState('state-listing');
+  });
+
+  document.getElementById('btn-no').addEventListener('click', () => {
+    window.location.href = 'index.html';
+  });
+
+  /* ═══════════════════════════════════════════════
+     INIT
+  ═══════════════════════════════════════════════ */
+  function init() {
+    // Render product grid once
+    renderProductGrid();
+
+    // Update badge from stored cart
+    updateCartBadge();
+
+    // Check age gate
+    if (sessionStorage.getItem('age_verified') === 'true') {
+      showState('state-listing', document.getElementById('state-listing'));
+    } else {
+      showState('state-agegate', document.getElementById('state-agegate'));
+    }
+  }
+
+  // Wait for GSAP to be ready
+  if (typeof gsap !== 'undefined') {
+    init();
+  } else {
+    window.addEventListener('load', init);
+  }
+
+})();
+</script>
+</body>
+</html>
