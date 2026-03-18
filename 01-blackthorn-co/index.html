@@ -632,287 +632,56 @@
     }
 
 
-    /* ─── ORDER SECTION ─── */
+    /* ─── CTA SECTION ─── */
     #acquire {
       background: #000000;
-      min-height: 100vh;
-      padding: 120px 0;
-      display: flex;
-      align-items: stretch;
+      padding: 160px 0;
+      text-align: center;
     }
 
-    .order-inner {
-      width: 100%;
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 0 80px;
-      display: flex;
-      align-items: stretch;
-      position: relative;
-    }
-
-    .order-divider {
-      width: 1px;
-      background: rgba(201, 168, 76, 0.2);
-      flex-shrink: 0;
-      transform-origin: top;
-      transform: scaleY(0);
-      align-self: stretch;
-      margin: 0 60px;
-    }
-
-    /* LEFT COLUMN */
-    .order-left {
-      width: 45%;
-      flex-shrink: 0;
+    .cta-inner {
       display: flex;
       flex-direction: column;
+      align-items: center;
+    }
+
+    .cta-rule {
+      width: 120px;
+      height: 1px;
+      background: rgba(201,168,76,0.4);
+      transform-origin: left;
+      transform: scaleX(0);
+    }
+
+    .cta-headline {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(40px, 5vw, 72px);
+      color: #F5F0E8;
+      text-align: center;
+      margin-top: 40px;
+      max-width: 700px;
+      line-height: 1.2;
       opacity: 0;
-      transform: translateY(40px);
     }
 
-    .order-estate-label {
+    .cta-sub {
       font-family: 'Raleway', sans-serif;
       font-weight: 300;
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.4em;
+      font-size: 13px;
       color: #6B6560;
-    }
-
-    .order-distillery-name {
-      font-family: 'Cormorant Garamond', serif;
-      font-weight: 300;
-      font-size: 32px;
-      color: #F5F0E8;
+      letter-spacing: 0.25em;
+      text-align: center;
       margin-top: 24px;
-    }
-
-    .order-short-rule {
-      width: 60px;
-      height: 1px;
-      background: #C9A84C;
-      margin-top: 20px;
-    }
-
-    .order-address {
-      font-family: 'Raleway', sans-serif;
-      font-weight: 300;
-      font-size: 14px;
-      color: #8B8580;
-      line-height: 2;
-      margin-top: 24px;
-    }
-
-    .order-contact-block {
-      margin-top: 32px;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .order-contact-label {
-      font-family: 'Raleway', sans-serif;
-      font-weight: 300;
-      font-size: 9px;
-      text-transform: uppercase;
-      letter-spacing: 0.4em;
-      color: #6B6560;
-    }
-
-    .order-contact-label+.order-contact-label {
-      margin-top: 20px;
-    }
-
-    .order-contact-value {
-      font-family: 'Raleway', sans-serif;
-      font-weight: 300;
-      font-size: 14px;
-      color: #F5F0E8;
-      margin-top: 8px;
-    }
-
-    .order-contact-gap {
-      margin-top: 20px;
-    }
-
-    .order-footer-text {
-      font-family: 'Raleway', sans-serif;
-      font-weight: 300;
-      font-size: 9px;
-      text-transform: uppercase;
-      letter-spacing: 0.5em;
-      color: #3A3530;
-      margin-top: 60px;
-    }
-
-    /* RIGHT COLUMN */
-    .order-right {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
       opacity: 0;
-      transform: translateY(40px);
     }
 
-    .order-promise {
-      font-family: 'Cormorant Garamond', serif;
-      font-weight: 300;
-      font-style: italic;
-      font-size: 22px;
-      color: rgba(201, 168, 76, 0.8);
-      line-height: 1.5;
-    }
-
-    .order-full-rule {
-      width: 100%;
-      height: 1px;
-      background: rgba(201, 168, 76, 0.25);
-      margin-top: 20px;
-    }
-
-    .order-form-label {
-      font-family: 'Raleway', sans-serif;
-      font-weight: 300;
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.4em;
-      color: #6B6560;
-      margin-top: 32px;
-    }
-
-    /* Select */
-    .order-select-wrap {
-      position: relative;
-      margin-top: 16px;
-    }
-
-    .order-select {
-      width: 100%;
-      background: #0A0A0A;
-      border: none;
-      border-bottom: 1px solid rgba(201, 168, 76, 0.5);
-      border-radius: 0;
-      appearance: none;
-      -webkit-appearance: none;
-      font-family: 'Raleway', sans-serif;
-      font-weight: 300;
-      font-size: 14px;
-      color: #F5F0E8;
-      padding: 14px 32px 14px 0;
-      outline: none;
-      cursor: pointer;
-    }
-
-    .order-select option {
-      background: #0A0A0A;
-      color: #F5F0E8;
-    }
-
-    .order-select option:disabled {
-      color: #3A3530;
-    }
-
-    .order-select-arrow {
-      position: absolute;
-      right: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      pointer-events: none;
-      width: 10px;
-      height: 6px;
-    }
-
-    .order-select-arrow::before,
-    .order-select-arrow::after {
-      content: '';
-      position: absolute;
-      width: 6px;
-      height: 1px;
-      background: #C9A84C;
-      top: 2px;
-    }
-
-    .order-select-arrow::before {
-      left: 0;
-      transform: rotate(35deg);
-    }
-
-    .order-select-arrow::after {
-      right: 0;
-      transform: rotate(-35deg);
-    }
-
-    /* Quantity */
-    .order-qty-label {
-      font-family: 'Raleway', sans-serif;
-      font-weight: 300;
-      font-size: 9px;
-      text-transform: uppercase;
-      letter-spacing: 0.4em;
-      color: #6B6560;
-      margin-top: 24px;
-    }
-
-    .order-qty-buttons {
+    .cta-btn {
       display: flex;
-      gap: 0;
-      margin-top: 12px;
-    }
-
-    .order-qty-btn {
-      width: 56px;
-      height: 44px;
-      background: #0A0A0A;
-      border: 1px solid #1A1A1A;
-      font-family: 'Cormorant Garamond', serif;
-      font-weight: 300;
-      font-size: 18px;
-      color: #6B6560;
-      cursor: pointer;
-      transition: border-color 0.2s, color 0.2s;
-      margin-right: -1px;
-    }
-
-    .order-qty-btn.active {
-      border-color: #C9A84C;
-      color: #C9A84C;
-      position: relative;
-      z-index: 1;
-    }
-
-    /* Name / Email row */
-    .order-fields-row {
-      display: flex;
-      gap: 20px;
-      margin-top: 32px;
-    }
-
-    .order-field {
-      flex: 1;
-      background: transparent;
-      border: none;
-      border-bottom: 1px solid #2A2520;
-      font-family: 'Raleway', sans-serif;
-      font-weight: 300;
-      font-size: 14px;
-      color: #F5F0E8;
-      padding: 12px 0;
-      outline: none;
-      transition: border-color 0.3s ease;
-    }
-
-    .order-field::placeholder {
-      color: #3A3530;
-    }
-
-    .order-field:focus {
-      border-bottom-color: #C9A84C;
-    }
-
-    /* Submit */
-    .order-submit {
-      width: 100%;
-      height: 52px;
+      align-items: center;
+      justify-content: center;
+      width: 240px;
+      height: 54px;
       background: #000000;
       border: 1px solid #C9A84C;
       font-family: 'Raleway', sans-serif;
@@ -921,23 +690,34 @@
       text-transform: uppercase;
       letter-spacing: 0.35em;
       color: #C9A84C;
-      cursor: pointer;
-      margin-top: 32px;
-      transition: background 0.3s ease-out, color 0.3s ease-out;
+      text-decoration: none;
+      margin-top: 48px;
+      transition: background 0.3s ease, color 0.3s ease;
+      opacity: 0;
     }
 
-    .order-submit:hover {
+    .cta-btn:hover {
       background: #C9A84C;
       color: #000000;
     }
 
-    .order-reassurance {
+    .cta-note {
       font-family: 'Raleway', sans-serif;
       font-weight: 300;
       font-size: 11px;
-      color: #3A3530;
+      color: #2A2520;
       text-align: center;
-      margin-top: 16px;
+      margin-top: 20px;
+      opacity: 0;
+    }
+
+    .cta-rule-bottom {
+      width: 120px;
+      height: 1px;
+      background: rgba(201,168,76,0.4);
+      margin-top: 60px;
+      transform-origin: left;
+      transform: scaleX(0);
     }
 
     /* ─── FOOTER ─── */
@@ -1484,72 +1264,15 @@
 
   <div class="gold-rule" id="rule-4"></div>
 
-  <!-- ─── ORDER ─── -->
+  <!-- ─── CTA ─── -->
   <section id="acquire">
-    <div class="order-inner">
-
-      <!-- LEFT: Distillery info -->
-      <div class="order-left" id="orderLeft">
-        <div class="order-estate-label">The Estate</div>
-        <div class="order-distillery-name">Blackthorn &amp; Co. Distillery</div>
-        <div class="order-short-rule"></div>
-        <div class="order-address">
-          4821 Bourbon Trail Road<br>
-          Lexington, Kentucky 40507<br>
-          United States
-        </div>
-        <div class="order-contact-block">
-          <span class="order-contact-label">Telephone</span>
-          <span class="order-contact-value">+1 (859) 400 1897</span>
-          <span class="order-contact-label order-contact-gap">Correspondence</span>
-          <span class="order-contact-value">estate@blackthornco.com</span>
-          <span class="order-contact-label order-contact-gap">Hours</span>
-          <span class="order-contact-value">Mon – Fri, 9am – 5pm EST</span>
-        </div>
-        <div class="order-footer-text">Highlands &middot; Scotland &middot; Est. 1897</div>
-      </div>
-
-      <!-- DIVIDER -->
-      <div class="order-divider" id="orderDivider"></div>
-
-      <!-- RIGHT: Order form -->
-      <div class="order-right" id="orderRight">
-        <p class="order-promise">Every bottle leaves our estate by hand. Every order is personal.</p>
-        <div class="order-full-rule"></div>
-
-        <div class="order-form-label">Your Order</div>
-
-        <!-- Expression select -->
-        <div class="order-select-wrap">
-          <select class="order-select">
-            <option value="" disabled selected>Select your expression</option>
-            <option>The Obsidian — 8 Year, Entry Collection</option>
-            <option>The Ember — 12 Year, Reserve</option>
-            <option>The Sovereign — 18 Year, Grand Reserve</option>
-            <option>The Covenant — 25 Year, Prestige</option>
-          </select>
-          <div class="order-select-arrow"></div>
-        </div>
-
-        <!-- Quantity -->
-        <div class="order-qty-label">Quantity</div>
-        <div class="order-qty-buttons">
-          <button class="order-qty-btn active" data-qty="1">01</button>
-          <button class="order-qty-btn" data-qty="2">02</button>
-          <button class="order-qty-btn" data-qty="3">03</button>
-        </div>
-
-        <!-- Name / Email -->
-        <div class="order-fields-row">
-          <input type="text" class="order-field" placeholder="Full name">
-          <input type="email" class="order-field" placeholder="Email address">
-        </div>
-
-        <!-- Submit -->
-        <button class="order-submit" type="button">Place Order</button>
-        <div class="order-reassurance">Free shipping on all US orders &middot; Dispatched within 3 business days</div>
-      </div>
-
+    <div class="cta-inner">
+      <div class="cta-rule" id="ctaRuleTop"></div>
+      <h2 class="cta-headline" id="ctaHeadline">Every bottle is still made the way it was in 1897.</h2>
+      <p class="cta-sub" id="ctaSub">A limited number of expressions are available each year.</p>
+      <a href="shop.html" class="cta-btn" id="ctaBtn">Acquire a Bottle</a>
+      <p class="cta-note" id="ctaNote">Free US shipping &middot; Hand inspected &middot; Dispatched within 3 days</p>
+      <div class="cta-rule-bottom" id="ctaRuleBottom"></div>
     </div>
   </section>
 
@@ -1728,34 +1451,31 @@
       });
     })();
 
-    /* ── ORDER SECTION: columns + divider ── */
+    /* ── CTA SECTION ── */
     (function () {
       const sec = document.querySelector('#acquire');
       if (!sec) return;
-      const trigger = { trigger: sec, start: 'top 75%' };
+      const trigger = { trigger: sec, start: 'top 78%' };
 
-      // Left column
-      gsap.fromTo('#orderLeft',
-        { opacity: 0, y: 40 },
-        { opacity: 1, y: 0, duration: 0.9, ease: 'power2.out', scrollTrigger: trigger }
-      );
-      // Right column — 0.2s later
-      gsap.fromTo('#orderRight',
-        { opacity: 0, y: 40 },
-        { opacity: 1, y: 0, duration: 0.9, ease: 'power2.out', delay: 0.2, scrollTrigger: trigger }
-      );
-      // Divider draws top to bottom
-      gsap.fromTo('#orderDivider',
-        { scaleY: 0 },
-        { scaleY: 1, duration: 1, ease: 'power2.inOut', scrollTrigger: trigger }
-      );
+      // Top rule draws left to right
+      gsap.to('#ctaRuleTop', {
+        scaleX: 1, duration: 0.8, ease: 'power2.inOut', scrollTrigger: trigger
+      });
 
-      // Quantity button toggle
-      document.querySelectorAll('.order-qty-btn').forEach(btn => {
-        btn.addEventListener('click', function () {
-          document.querySelectorAll('.order-qty-btn').forEach(b => b.classList.remove('active'));
-          this.classList.add('active');
-        });
+      // Staggered fade-up for each element
+      const els = ['#ctaHeadline', '#ctaSub', '#ctaBtn', '#ctaNote'];
+      els.forEach(function(sel, i) {
+        gsap.fromTo(sel,
+          { opacity: 0, y: 40 },
+          { opacity: 1, y: 0, duration: 0.9, ease: 'power2.out',
+            delay: i * 0.15, scrollTrigger: trigger }
+        );
+      });
+
+      // Bottom rule draws left to right
+      gsap.to('#ctaRuleBottom', {
+        scaleX: 1, duration: 0.8, ease: 'power2.inOut',
+        delay: 0.6, scrollTrigger: trigger
       });
     })();
 
